@@ -1,4 +1,4 @@
+<app-search-bar class="m-2" [(search)]="search" />
 <div id="product-list" class="grid grid-cols-4 gap-2">
-  <app-product-card [product]="product1" />
-  <app-product-card [product]="product2" />
+  <app-product-card *ngFor="let product of products" [product]="product"> </app-product-card>
 </div>
