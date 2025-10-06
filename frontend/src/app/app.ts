@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, model } from '@angular/core';
 import { ProductCard } from './components/product-card/product-card';
 import { Product } from './models/product.model';
 import { SearchBar } from './components/search-bar/search-bar';
@@ -13,7 +13,11 @@ import { SearchBar } from './components/search-bar/search-bar';
 export class App {
   products!: Product[];
 
-  search = '';
+  search = model('');
+
+  filteredProducts = computed(() => {
+    return this.products.filter((product) => product.name.includes(this.search()));
+  });
 
   constructor() {
     this.products = [];

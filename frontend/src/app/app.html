@@ -1,4 +1,11 @@
 <app-search-bar class="m-2" [(search)]="search" />
 <div id="product-list" class="grid grid-cols-4 gap-2">
-  <app-product-card *ngFor="let product of products" [product]="product"> </app-product-card>
+  @for (product of filteredProducts(); track product){
+  <app-product-card [product]="product" />
+  } @empty {
+  <div>No products found !</div>
+  }
 </div>
+@if (filteredProducts().length > 0) {
+<div>Found {{ filteredProducts().length }} products !</div>
+}
