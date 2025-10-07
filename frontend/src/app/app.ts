@@ -5,6 +5,8 @@ import { ProductModel } from './models/product.model';
 import { Product } from './services/product/product';
 import { SearchBar } from './components/search-bar/search-bar';
 
+import { toSignal } from '@angular/core/rxjs-interop';
+
 @Component({
   selector: 'app-root',
   imports: [CommonModule, ProductCard, SearchBar],
@@ -13,15 +15,14 @@ import { SearchBar } from './components/search-bar/search-bar';
 })
 export class App {
   productService = inject(Product);
-  products!: ProductModel[];
+  products = toSignal(this.productService.getAll());
 
   search = model('');
 
   filteredProducts = computed(() => {
-    return this.products.filter((product) => product.name.includes(this.search()));
+    const searchTerm = this.search().toLowerCase();
+    return (
+      this.products()?.filter((product) => product.name.toLowerCase().includes(searchTerm)) ?? []
+    );
   });
-
-  constructor() {
-    this.products = this.productService.getAll();
-  }
 }

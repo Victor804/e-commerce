@@ -1,89 +1,44 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ProductModel } from '../../models/product.model';
+import { HttpClient } from '@angular/common/http';
+import { IProduct } from '../../interfaces/product.interface';
+import { map, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class Product {
-  products: ProductModel[] = [];
-  currentIndex: number = 1;
+  BASE_URL = 'http://localhost:8080/products';
+  private http = inject(HttpClient);
 
-  constructor() {
-    this.load();
-  }
-
-  private save() {
-    localStorage.setItem('products', JSON.stringify(this.products));
-  }
-
-  private load() {
-    const productData = localStorage.getItem('products');
-    if (productData) {
-      this.products = JSON.parse(productData).map((productJSON: any) =>
-        Object.assign(new ProductModel(), productJSON)
-      );
-      this.currentIndex = Math.max(...this.products.map((product) => product.id));
-    } else {
-      this.init();
-      this.save();
-    }
-  }
-
-  private init() {
-    const product1 = new ProductModel();
-    product1.id = this.currentIndex++;
-    this.products.push(product1);
-
-    const product2 = new ProductModel();
-    product2.id = this.currentIndex++;
-    product2.name = 'Smartphone';
-    product2.price = 599.99;
-    product2.description = '6.5-inch display, 128GB storage, 5G enabled';
-    this.products.push(product2);
-
-    const product3 = new ProductModel();
-    product3.id = this.currentIndex++;
-    product3.name = 'Wireless Headphones';
-    product3.price = 199.99;
-    product3.description = 'Noise-cancelling over-ear headphones';
-    this.products.push(product3);
-  }
-
-  getAll(): ProductModel[] {
-    return this.products.map((product) => product.copy());
-  }
-
-  get(id: number): ProductModel | undefined {
-    const product = this.products.find((product) => product.id === id);
-    return product ? product.copy() : undefined;
-  }
-
-  add(product: ProductModel): ProductModel {
-    const productCopy = product.copy();
-    productCopy.id = this.currentIndex;
-    this.products.push(productCopy.copy());
-    this.currentIndex++;
-    this.save();
-    return productCopy;
-  }
-
-  update(product: ProductModel): ProductModel {
-    const productCopy = product.copy();
-
-    const productIndex = this.products.findIndex(
-      (originalProduct) => originalProduct.id === product.id
+  getAll(): Observable<ProductModel[]> {
+    return this.http.get<IProduct[]>(this.BASE_URL).pipe(
+      map((productDictArray) => {
+        return productDictArray.map<ProductModel>((productDict) =>
+          ProductModel.fromJson(productDict)
+        );
+      })
     );
-    if (productIndex != -1) {
-      this.products[productIndex] = productCopy.copy();
-      this.save();
-    }
-    return productCopy;
   }
 
-  delete(id: number) {
-    const productIndex = this.products.findIndex((originalProduct) => originalProduct.id === id);
-    if (productIndex != -1) {
-      this.products.splice(productIndex, 1);
-      this.save();
-    }
+  get(id: number): Observable<ProductModel> {
+    return this.http
+      .get<IProduct>(this.BASE_URL + '/' + id)
+      .pipe(map((productDict) => ProductModel.fromJson(productDict)));
+  }
+
+  add(product: ProductModel): Observable<ProductModel> {
+    return this.http
+      .post<IProduct>(this.BASE_URL, product.toJson())
+      .pipe(map((productDict) => ProductModel.fromJson(productDict)));
+  }
+
+  update(product: ProductModel): Observable<ProductModel> {
+    return this.http
+      .put<IProduct>(this.BASE_URL + '/' + product.id, product.toJson())
+      .pipe(map((productDict) => ProductModel.fromJson(productDict)));
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(this.BASE_URL + '/' + id);
   }
 }
