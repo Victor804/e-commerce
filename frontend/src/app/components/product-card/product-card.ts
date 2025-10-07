@@ -1,5 +1,5 @@
 import { Component, input, InputSignal } from '@angular/core';
-import { Product } from '../../models/product.model';
+import { ProductModel } from '../../models/product.model';
 
 @Component({
   selector: 'app-product-card',
@@ -7,5 +7,5 @@ import { Product } from '../../models/product.model';
   templateUrl: './product-card.html',
 })
 export class ProductCard {
-  product: InputSignal<Product> = input(new Product());
+  product: InputSignal<ProductModel> = input(new ProductModel());
 }

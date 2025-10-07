@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, model } from '@angular/core';
+import { Component, computed, inject, model } from '@angular/core';
 import { ProductCard } from './components/product-card/product-card';
-import { Product } from './models/product.model';
+import { ProductModel } from './models/product.model';
+import { Product } from './services/product/product';
 import { SearchBar } from './components/search-bar/search-bar';
 
 @Component({
@@ -11,7 +12,8 @@ import { SearchBar } from './components/search-bar/search-bar';
   styleUrl: 'app.css',
 })
 export class App {
-  products!: Product[];
+  productService = inject(Product);
+  products!: ProductModel[];
 
   search = model('');
 
@@ -20,21 +22,6 @@ export class App {
   });
 
   constructor() {
-    this.products = [];
-
-    const product1 = new Product();
-    this.products.push(product1);
-
-    const product2 = new Product();
-    product2.name = 'Smartphone';
-    product2.price = 599.99;
-    product2.description = '6.5-inch display, 128GB storage, 5G enabled';
-    this.products.push(product2);
-
-    const product3 = new Product();
-    product3.name = 'Wireless Headphones';
-    product3.price = 199.99;
-    product3.description = 'Noise-cancelling over-ear headphones';
-    this.products.push(product3);
+    this.products = this.productService.getAll();
   }
 }
