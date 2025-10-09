@@ -1,5 +1,5 @@
 import { Component, input, InputSignal } from '@angular/core';
-import { ProductModel } from '../../models/product.model';
+import { Product } from '../../core/api/openapi';
 
 @Component({
   selector: 'app-product-card',
@@ -7,5 +7,5 @@ import { ProductModel } from '../../models/product.model';
   templateUrl: './product-card.html',
 })
 export class ProductCard {
-  product: InputSignal<ProductModel> = input(new ProductModel());
+  product: InputSignal<Product> = input.required<Product>();
 }
