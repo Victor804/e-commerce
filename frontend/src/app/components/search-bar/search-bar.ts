@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-search-bar',
   imports: [FormsModule],
   templateUrl: './search-bar.html',
-  styleUrl: './search-bar.css',
 })
 export class SearchBar {
   search = model<string>('');

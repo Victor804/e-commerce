@@ -12,7 +12,6 @@ import { Product } from './core/api/openapi';
   standalone: true,
   imports: [CommonModule, ProductCard, SearchBar],
   templateUrl: 'app.html',
-  styleUrl: 'app.css',
 })
 export class App {
   productService = inject(ProductControllerService);

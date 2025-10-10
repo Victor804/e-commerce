@@ -1,11 +1,21 @@
-<app-search-bar class="m-2" [(search)]="search" />
-<div id="product-list" class="grid grid-cols-4 gap-2">
-  @for (product of filteredProducts(); track product){
-  <app-product-card [product]="product" />
-  } @empty {
-  <div>No products found !</div>
+<header class="bg-slate-900 text-gray-900 p-4 flex justify-between items-center shadow-md">
+  <div class="w-1/2">
+    <app-search-bar [(search)]="search" />
+  </div>
+</header>
+
+<main class="p-6 bg-gray-100 min-h-screen">
+  @if (filteredProducts().length > 0) {
+  <div class="mb-4 text-gray-600 text-sm">
+    Found <span class="font-semibold">{{ filteredProducts().length }}</span> products
+  </div>
+
+  <div id="product-list" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    @for (product of filteredProducts(); track product) {
+    <app-product-card [product]="product" />
+    }
+  </div>
+  } @else {
+  <div class="text-center text-gray-500 mt-12">No products found 😢</div>
   }
-</div>
-@if (filteredProducts().length > 0) {
-<div>Found {{ filteredProducts().length }} products !</div>
-}
+</main>
