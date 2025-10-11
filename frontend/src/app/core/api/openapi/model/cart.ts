@@ -7,12 +7,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { User } from './user';
+import { CartItem } from './cartItem';
 
 
-export interface Product { 
+export interface Cart { 
     id?: number;
-    name?: string;
-    description?: string;
-    price?: number;
+    user?: User;
+    items?: Array<CartItem>;
 }
 

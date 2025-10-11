@@ -33,7 +33,6 @@ public class ProductService {
             existing.setName(updatedProduct.getName());
             existing.setDescription(updatedProduct.getDescription());
             existing.setPrice(updatedProduct.getPrice());
-            existing.setQuantity(updatedProduct.getQuantity());
             return repository.save(existing);
         }
         return null;

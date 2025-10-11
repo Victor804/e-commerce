@@ -1,6 +1,10 @@
 <header class="bg-slate-900 text-gray-900 p-4 flex justify-between items-center shadow-md">
   <div class="w-1/2">
-    <app-search-bar [(search)]="search" />
+    <app-search-bar [(search)]="search"></app-search-bar>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <button class="text-slate-100 hover:underline">Cart ({{ cartCount() }})</button>
   </div>
 </header>
 
@@ -12,7 +16,7 @@
 
   <div id="product-list" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     @for (product of filteredProducts(); track product) {
-    <app-product-card [product]="product" />
+    <app-product-card [product]="product" (cartUpdated)="onCartUpdated($event)" />
     }
   </div>
   } @else {

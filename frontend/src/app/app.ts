@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, model } from '@angular/core';
+import { Component, computed, inject, model, signal } from '@angular/core';
 import { ProductCard } from './components/product-card/product-card';
 import { SearchBar } from './components/search-bar/search-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
 
-import { ProductControllerService } from './core/api/openapi';
+import { Cart, ProductControllerService } from './core/api/openapi';
 import { Product } from './core/api/openapi';
 
 @Component({
@@ -15,8 +15,9 @@ import { Product } from './core/api/openapi';
 })
 export class App {
   productService = inject(ProductControllerService);
-
   products = toSignal<Product[]>(this.productService.getAllProducts());
+
+  cartCount = signal(0);
 
   search = model('');
 
@@ -26,4 +27,9 @@ export class App {
       this.products()?.filter((product) => product.name?.toLowerCase().includes(searchTerm)) ?? []
     );
   });
+
+  onCartUpdated(cart: Cart) {
+    const count = cart.items?.reduce((total, item) => total + (item.quantity ?? 0), 0) ?? 0;
+    this.cartCount.set(count);
+  }
 }
