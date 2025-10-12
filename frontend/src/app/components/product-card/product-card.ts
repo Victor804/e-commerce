@@ -12,7 +12,7 @@ export class ProductCard {
   cartUpdated = output<Cart>();
 
   onClick() {
-    this.cartService.addProductToCart(1, this.product().id!, 1).subscribe({
+    this.cartService.addProductToCart(this.product().id!, 1).subscribe({
       next: (cart) => {
         this.cartUpdated.emit(cart);
       },

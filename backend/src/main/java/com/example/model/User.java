@@ -20,22 +20,27 @@ public class User {
     private String name;
     private String email;
 
+    private String keycloakId;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Cart cart;
 
     public User() {}
     
-    public User(String name, String email) {
+    public User(String name, String email, String keycloakId) {
         this.name = name;
         this.email = email;
+        this.keycloakId = keycloakId;
     }
 
     public Long getId() { return id; }
     public String getName() { return name; }
     public String getEmail() { return email; }
+    public String getKeycloakId() { return keycloakId; }
     public Cart getCart() { return cart; }
 
+    public void setKeycloakId(String keycloakId) {this.keycloakId = keycloakId; }
     public void setCart(Cart cart) { this.cart = cart; }
 
 }

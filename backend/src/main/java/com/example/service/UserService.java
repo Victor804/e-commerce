@@ -1,11 +1,12 @@
 package com.example.service;
 
-import java.util.List;
-
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import com.example.model.User;
 import com.example.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
@@ -15,15 +16,13 @@ public class UserService {
         this.repository = repository;
     }
 
-    public List<User> getAllUsers() {
-        return repository.findAll();
-    }
+    @Transactional
+    public User getOrCreateUserFromJwt(Jwt jwt) {
+        String keycloakId = jwt.getClaimAsString("sub");
+        String username = jwt.getClaimAsString("preferred_username");
+        String email = jwt.getClaimAsString("email");
 
-    public User getUserById(Long id) {
-        return repository.findById(id).orElse(null);
-    }
-
-    public User addUser(User user) {
-        return repository.save(user);
+        return repository.findByKeycloakId(keycloakId)
+                .orElseGet(() -> repository.save(new User(username, email, keycloakId)));
     }
 }

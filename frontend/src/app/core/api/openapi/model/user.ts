@@ -14,6 +14,7 @@ export interface User {
     id?: number;
     name?: string;
     email?: string;
+    keycloakId?: string;
     cart?: Cart;
 }
 

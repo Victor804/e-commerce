@@ -3,9 +3,8 @@ import { Component, computed, inject, model, signal } from '@angular/core';
 import { ProductCard } from './components/product-card/product-card';
 import { SearchBar } from './components/search-bar/search-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
-
-import { Cart, ProductControllerService } from './core/api/openapi';
-import { Product } from './core/api/openapi';
+import { Cart, ProductControllerService, Product, CartControllerService } from './core/api/openapi';
+import Keycloak from 'keycloak-js';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +13,12 @@ import { Product } from './core/api/openapi';
   templateUrl: 'app.html',
 })
 export class App {
+  private readonly keycloak = inject(Keycloak);
+
+  cartService = inject(CartControllerService);
+
   productService = inject(ProductControllerService);
   products = toSignal<Product[]>(this.productService.getAllProducts());
-
   cartCount = signal(0);
 
   search = model('');
@@ -28,8 +30,40 @@ export class App {
     );
   });
 
+  constructor() {
+    this.loadCartCount();
+  }
+
+  loadCartCount() {
+    this.cartService.geCart().subscribe({
+      next: (cart: Cart) => {
+        const count = cart.items?.reduce((total, item) => total + (item.quantity ?? 0), 0) ?? 0;
+        this.cartCount.set(count);
+      },
+      error: () => {
+        this.cartCount.set(0);
+      },
+    });
+  }
+
   onCartUpdated(cart: Cart) {
     const count = cart.items?.reduce((total, item) => total + (item.quantity ?? 0), 0) ?? 0;
     this.cartCount.set(count);
+  }
+
+  login() {
+    this.keycloak.login();
+  }
+
+  logout() {
+    this.keycloak.logout();
+  }
+
+  get isAuthenticated() {
+    return !!this.keycloak.token;
+  }
+
+  get username() {
+    return this.keycloak.tokenParsed?.['preferred_username'];
   }
 }
