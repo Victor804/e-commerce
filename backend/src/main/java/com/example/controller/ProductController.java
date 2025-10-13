@@ -32,7 +32,7 @@ public class ProductController {
     }
     
     @GetMapping(value = "/{id}", produces = "application/json")
-    public Product geProductById(@PathVariable Long id) {
+    public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 

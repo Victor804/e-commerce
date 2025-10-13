@@ -1,18 +1,10 @@
-import {
-  Component,
-  computed,
-  inject,
-  input,
-  InputSignal,
-  model,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, input, InputSignal, model } from '@angular/core';
 import { Cart, CartControllerService, Product } from '../../core/api/openapi';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './product-card.html',
 })
 export class ProductCard {

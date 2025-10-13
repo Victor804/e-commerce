@@ -1,60 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject, model, signal } from '@angular/core';
-import { ProductCard } from './components/product-card/product-card';
-import { SearchBar } from './components/search-bar/search-bar';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Cart, ProductControllerService, Product, CartControllerService } from './core/api/openapi';
-import Keycloak from 'keycloak-js';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ProductCard, SearchBar],
+  imports: [RouterModule],
   templateUrl: 'app.html',
 })
-export class App {
-  private readonly keycloak = inject(Keycloak);
-
-  cartService = inject(CartControllerService);
-  cart = model<Cart>({ items: [] });
-
-  productService = inject(ProductControllerService);
-  products = toSignal<Product[]>(this.productService.getAllProducts());
-
-  search = model('');
-
-  filteredProducts = computed(() => {
-    const searchTerm = this.search().toLowerCase();
-    return (
-      this.products()?.filter((product) => product.name?.toLowerCase().includes(searchTerm)) ?? []
-    );
-  });
-
-  constructor() {
-    this.loadCartCount();
-  }
-
-  loadCartCount() {
-    this.cartService.geCart().subscribe({
-      next: (cart: Cart) => {
-        this.cart.set(cart);
-      },
-    });
-  }
-
-  login() {
-    this.keycloak.login();
-  }
-
-  logout() {
-    this.keycloak.logout();
-  }
-
-  get isAuthenticated() {
-    return !!this.keycloak.token;
-  }
-
-  get username() {
-    return this.keycloak.tokenParsed?.['preferred_username'];
-  }
-}
+export class App {}
