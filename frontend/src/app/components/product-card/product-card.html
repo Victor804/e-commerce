@@ -4,14 +4,29 @@
   <div class="p-4 flex flex-col justify-between flex-grow">
     <h2 class="font-semibold text-lg mb-2 line-clamp-2">{{ product().name }}</h2>
     <p class="text-gray-600 text-sm flex-grow line-clamp-3">{{ product().description }}</p>
+
     <div class="mt-4 flex items-center justify-between">
       <span class="text-xl font-bold text-amber-600">{{ product().price }} €</span>
+      @if(quantity() === 0) {
       <button
         class="bg-amber-500 hover:bg-amber-600 text-white rounded-lg px-3 py-1 text-sm font-medium"
-        (click)="onClick()"
+        (click)="add()"
       >
         Add to Cart
       </button>
+      } @else {
+      <div class="flex items-center gap-2">
+        <button class="bg-gray-300 px-2 rounded" (click)="remove()">-</button>
+        <input
+          type="number"
+          class="w-12 text-center border rounded"
+          [value]="quantity()"
+          (change)="setQuantity($any($event.target).valueAsNumber)"
+          min="0"
+        />
+        <button class="bg-gray-300 px-2 rounded" (click)="add()">+</button>
+      </div>
+      }
     </div>
   </div>
 </div>

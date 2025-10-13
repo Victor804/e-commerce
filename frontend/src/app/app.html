@@ -5,7 +5,7 @@
 
   <div class="flex items-center gap-4">
     <button class="bg-slate-700 text-white px-3 py-1 rounded-lg hover:bg-slate-600 transition">
-      Cart ({{ cartCount() }})
+      Cart
     </button>
 
     <button
@@ -28,17 +28,22 @@
 </header>
 
 <main class="p-6 bg-gray-100 min-h-screen">
-  @if (filteredProducts().length > 0) {
+  @if (isAuthenticated) { @if (filteredProducts().length > 0) {
   <div class="mb-4 text-gray-600 text-sm">
     Found <span class="font-semibold">{{ filteredProducts().length }}</span> products
   </div>
 
   <div id="product-list" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     @for (product of filteredProducts(); track product) {
-    <app-product-card [product]="product" (cartUpdated)="onCartUpdated($event)" />
+    <app-product-card [product]="product" [(cart)]="cart" />
     }
   </div>
   } @else {
   <div class="text-center text-gray-500 mt-12">No products found 😢</div>
+  } }@else {
+  <div class="text-center text-gray-500 mt-12">
+    <a href="#" (click)="login()" class="text-blue-600 hover:underline"> Log in </a>
+    to view products
+  </div>
   }
 </main>

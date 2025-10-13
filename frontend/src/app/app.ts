@@ -16,10 +16,10 @@ export class App {
   private readonly keycloak = inject(Keycloak);
 
   cartService = inject(CartControllerService);
+  cart = model<Cart>({ items: [] });
 
   productService = inject(ProductControllerService);
   products = toSignal<Product[]>(this.productService.getAllProducts());
-  cartCount = signal(0);
 
   search = model('');
 
@@ -37,18 +37,9 @@ export class App {
   loadCartCount() {
     this.cartService.geCart().subscribe({
       next: (cart: Cart) => {
-        const count = cart.items?.reduce((total, item) => total + (item.quantity ?? 0), 0) ?? 0;
-        this.cartCount.set(count);
-      },
-      error: () => {
-        this.cartCount.set(0);
+        this.cart.set(cart);
       },
     });
-  }
-
-  onCartUpdated(cart: Cart) {
-    const count = cart.items?.reduce((total, item) => total + (item.quantity ?? 0), 0) ?? 0;
-    this.cartCount.set(count);
   }
 
   login() {

@@ -50,7 +50,7 @@ public class CartService {
     }
 
     @Transactional
-    public void decreaseProductQuantityInCart(User user, Long productId, int quantity) {
+    public Cart decreaseProductQuantityInCart(User user, Long productId, int quantity) {
         Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new RuntimeException("Cart not found"));
 
         Optional<CartItem> existingItem = cart.getItems().stream().filter(item -> item.getProduct().getId().equals(productId)).findFirst();
@@ -62,6 +62,6 @@ public class CartService {
                 cart.getItems().remove(item);
             }
         }
-        cartRepository.save(cart);
+        return cartRepository.save(cart);
     }
 }

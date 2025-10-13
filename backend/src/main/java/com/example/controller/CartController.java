@@ -40,9 +40,9 @@ public class CartController {
         return cartService.addProductToCart(user, productId, quantity);
     }
 
-    @DeleteMapping(value = "/remove/{productId}")
-    public void decreaseProductQuantityInCart(@AuthenticationPrincipal Jwt jwt, @PathVariable Long productId, @RequestParam(defaultValue = "1") int quantity) {
+    @DeleteMapping(value = "/remove/{productId}", produces = "application/json")
+    public Cart decreaseProductQuantityInCart(@AuthenticationPrincipal Jwt jwt, @PathVariable Long productId, @RequestParam(defaultValue = "1") int quantity) {
         User user = userService.getOrCreateUserFromJwt(jwt);
-        cartService.decreaseProductQuantityInCart(user, productId, quantity);
+        return cartService.decreaseProductQuantityInCart(user, productId, quantity);
     }
 }
