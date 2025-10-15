@@ -1,0 +1,21 @@
+<main class="p-6 bg-gray-100 min-h-screen">
+  <h1 class="text-2xl font-semibold mb-6">Your Cart</h1>
+
+  <div *ngIf="cart().items?.length; else emptyCart">
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      @for (item of cart().items; track item.id) {
+      <app-product-card *ngIf="item.product" [product]="item.product" [(cart)]="cart" />
+      }
+    </div>
+
+    <div class="mt-8 text-right">
+      <p class="text-lg font-semibold">
+        Total: <span class="text-blue-600">{{ totalPrice() | number : '1.2-2' }} €</span>
+      </p>
+    </div>
+  </div>
+
+  <ng-template #emptyCart>
+    <p class="text-gray-500">Your cart is empty.</p>
+  </ng-template>
+</main>

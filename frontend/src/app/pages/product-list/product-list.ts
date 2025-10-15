@@ -10,10 +10,11 @@ import Keycloak from 'keycloak-js';
 import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { ProductCard } from '../../components/product-card/product-card';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, SearchBar, ProductCard],
+  imports: [CommonModule, SearchBar, ProductCard, RouterModule],
   templateUrl: './product-list.html',
 })
 export class ProductList {
@@ -35,10 +36,10 @@ export class ProductList {
   });
 
   constructor() {
-    this.loadCartCount();
+    this.loadCart();
   }
 
-  loadCartCount() {
+  loadCart() {
     this.cartService.geCart().subscribe({
       next: (cart: Cart) => {
         this.cart.set(cart);
