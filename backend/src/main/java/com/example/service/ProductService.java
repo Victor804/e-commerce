@@ -48,4 +48,9 @@ public class ProductService {
         repository.deleteById(id);
     }
 
+    @Transactional
+    public void deleteAllProduct() {
+        repository.deleteAll();
+    }
+
 }
