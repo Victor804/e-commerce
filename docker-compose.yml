@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ecommerce
+    network_mode: "host"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.5
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_PORT: 8081
+    command: start-dev
+    network_mode: "host"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: spring-backend
+    network_mode: "host"
+    depends_on:
+      - postgres
+      - keycloak
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: angular
+    network_mode: "host"
+    depends_on:
+      - backend
+      - keycloak
+
+volumes:
+  postgres_data:
