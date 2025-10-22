@@ -62,4 +62,8 @@ export class ProductList {
   get username() {
     return this.keycloak.tokenParsed?.['preferred_username'];
   }
+
+  get isAdmin() {
+    return !this.keycloak.tokenParsed?.realm_access?.roles.includes('user');
+  }
 }
